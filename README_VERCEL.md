@@ -34,8 +34,8 @@ Manage your Discord server **A to Z directly from the web** without typing any s
 3. Import your GitHub repository.
 4. Set **Root Directory** to `dashboard` (if deploying from a monorepo).
 5. In **Environment Variables**, add:
-   - `DISCORD_BOT_TOKEN` = `MTU1ODE5MzQxNjkwNTY5NTI2Mg.GdR84P.ZYZPUOb8BsZEUG9A1UA3zN3uet0wyFOb3SvADs`
-   - `APPLICATION_ID` = `1558193416905695262`
+   - `DISCORD_BOT_TOKEN` = `ENTER YOU BOT TOKEN`
+   - `APPLICATION_ID` = `ENTER YOUR APPLICATION ID`
    - `ADMIN_PASSKEY` = `luna2026`
    - `CLIENT_SECRET` = *(Optional: From Discord Developer Portal -> OAuth2 -> Client Secret)*
 6. Click **Deploy**!
@@ -44,7 +44,7 @@ Manage your Discord server **A to Z directly from the web** without typing any s
 
 ## 🔒 Discord Developer Portal OAuth2 Setup (For Public Users)
 If you want other server owners to log in via Discord OAuth2 on your live Vercel domain:
-1. Go to [Discord Developer Portal](https://discord.com/developers/applications/1558193416905695262/oauth2).
+1. Go to [Discord Developer Portal](https://discord.com/developers/applications/).
 2. Click **OAuth2** -> **General**.
 3. Under **Redirects**, add your Vercel URL:
    ```

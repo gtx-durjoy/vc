@@ -35,8 +35,8 @@ export default async function handler(req, res) {
             description: [
               "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
               `<a:msarrow:1558334689725644862> **WELCOME TO THE SERVER** <a:c_wave:1558336136290770974>\n`,
-              `<a:AI_verify_certified_owo_lol_anim:1553468976338567259> **Enjoy Chatting In:** ${chatMention} 💬`,
-              `<a:AI_verify_certified_owo_lol_anim:1553468976338567259> **Check Server Rules:** ${rulesMention} 📜`,
+              `<a:AI_verify_certified_owo_lol_anim:1553468976338567259> **Enjoy Chatting In:** ${chatMention} <a:msarrow:1558334689725644862>`,
+              `<a:AI_verify_certified_owo_lol_anim:1553468976338567259> **Check Server Rules:** ${rulesMention} <a:msarrow:1558334689725644862>`,
               `<a:AI_verify_certified_owo_lol_anim:1553468976338567259> **Important News & Updates:** <a:Announce:1558339943909032068>\n`,
               "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
               `<a:ie_black_cranium:1558328574916698132> You are a valued member of our elite community!`
@@ -75,7 +75,7 @@ export default async function handler(req, res) {
         embeds: [
           {
             color: 0xED4245,
-            title: `🚪 Member Left • ${serverName || 'PLAY HEX'}`,
+            title: `<a:c_wave:1558336136290770974> Member Left • ${serverName || 'PLAY HEX'}`,
             description: [
               "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
               `<a:msarrow:1558334689725644862> **A member has departed from the server.** <a:c_wave:1558336136290770974>\n`,
@@ -150,12 +150,12 @@ export default async function handler(req, res) {
         embeds: [
           {
             color: 0x5865F2,
-            title: `<a:tickets:1422971964091273388> ${title || 'Support & Assistance Portal'}`,
+            title: `<a:Announce:1558339943909032068> ${title || 'Support & Assistance Portal'}`,
             description: [
               description || "Need support, claim rewards, or contact management? Click the button below to initialize a confidential private ticket channel with staff.\n",
               "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
-              "🔒 **Strict Privacy:** Tickets are visible only to you and administrators.",
-              "⚡ **Fast Response:** Average response time under 15 minutes."
+              "<:773429modshieldicon:1530842211116253224> **Strict Privacy:** Tickets are visible only to you and administrators.",
+              "<a:fire:1553468477006946497> **Fast Response:** Average response time under 15 minutes."
             ].join('\n'),
             footer: { text: "LUNA Automated Ticket Dispatcher" },
             timestamp: new Date().toISOString()
@@ -170,7 +170,7 @@ export default async function handler(req, res) {
                 style: 1, // Primary (Blurple)
                 label: "Create Ticket",
                 custom_id: "ticket_create_btn",
-                emoji: { name: "tickets", id: "1422971964091273388", animated: true }
+                emoji: { name: "Announce", id: "1558339943909032068", animated: true }
               }
             ]
           }
@@ -200,13 +200,13 @@ export default async function handler(req, res) {
         embeds: [
           {
             color: 0xF1C40F,
-            title: `🎉 GIVEAWAY: ${prize || 'Discord Nitro 1 Month'}`,
+            title: `<a:fdb_color_vip12:1556362624550047796> GIVEAWAY: ${prize || 'Discord Nitro 1 Month'}`,
             description: [
-              `Click the button below to enter and compete for **${prize || 'Nitro'}**!\n`,
+              `<a:msarrow:1558334689725644862> Click the button below to enter and compete for **${prize || 'Nitro'}**!\n`,
               "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
-              `⏱️ **Ends:** <t:${endTimestamp}:R> (<t:${endTimestamp}:f>)`,
-              `👑 **Winners:** **${winnersCount || 1}**`,
-              `💎 **Hosted via:** LUNA Web Studio`
+              `<a:loading:1558328517844795392> **Ends:** <t:${endTimestamp}:R> (<t:${endTimestamp}:f>)`,
+              `<a:198907owner:1553651104124768307> **Winners:** **${winnersCount || 1}**`,
+              `<a:fdb_color_vip12:1556362624550047796> **Hosted via:** LUNA Web Studio`
             ].join('\n'),
             footer: { text: "Click Join Giveaway below to enter!" },
             timestamp: new Date().toISOString()
@@ -219,9 +219,9 @@ export default async function handler(req, res) {
               {
                 type: 2,
                 style: 3, // Success Green
-                label: "Join Giveaway (0)",
+                label: "Join Giveaway",
                 custom_id: "giveaway_join_btn",
-                emoji: { name: "🎉" }
+                emoji: { name: "fdb_color_vip12", id: "1556362624550047796", animated: true }
               }
             ]
           }
@@ -250,12 +250,12 @@ export default async function handler(req, res) {
         embeds: [
           {
             color: 0xED4245,
-            title: `🚨 EMERGENCY SERVER LOCKDOWN ACTIVATED`,
+            title: `<a:736775redcheck:1553470739380961472> EMERGENCY SERVER LOCKDOWN ACTIVATED`,
             description: [
-              `**Reason:** ${reason || 'Security protocol initiated by administration.'}\n`,
+              `<a:msarrow:1558334689725644862> **Reason:** ${reason || 'Security protocol initiated by administration.'}\n`,
               "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
-              "⚠️ Public message permissions have been temporarily restricted.",
-              "🛡️ Please standby while administrators review server safety."
+              "<a:736775redcheck:1553470739380961472> Public message permissions have been temporarily restricted.",
+              "<:773429modshieldicon:1530842211116253224> Please standby while administrators review server safety."
             ].join('\n'),
             footer: { text: "LUNA Defense Matrix" },
             timestamp: new Date().toISOString()
@@ -272,6 +272,34 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, message: 'Lockdown broadcast sent to Discord channel!' });
     }
 
+    // 6b. Security Unlockdown Alert
+    if (action === 'unlockdown') {
+      const payload = {
+        embeds: [
+          {
+            color: 0x57F287,
+            title: `<a:AI_verify_certified_owo_lol_anim:1553468976338567259> SERVER LOCKDOWN DEACTIVATED`,
+            description: [
+              `<a:msarrow:1558334689725644862> Emergency security lockdown has been lifted by administration.\n`,
+              "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
+              "<a:AI_verify_certified_owo_lol_anim:1553468976338567259> Public channel communication permissions are restored.",
+              "<:773429modshieldicon:1530842211116253224> Server security matrix is operating normally."
+            ].join('\n'),
+            footer: { text: "LUNA Defense Matrix • Restored" },
+            timestamp: new Date().toISOString()
+          }
+        ]
+      };
+
+      const sendResp = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+        method: 'POST',
+        headers: { Authorization: `Bot ${BOT_TOKEN}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      return res.status(200).json({ success: true, message: 'Server lockdown lifted and notice broadcast!' });
+    }
+
     // 7. Deploy Member Verification Panel (NEW!)
     if (action === 'deploy-verification') {
       const { title, description, roleId } = data || {};
@@ -284,8 +312,8 @@ export default async function handler(req, res) {
             description: [
               description || "Welcome! To gain full access to this server, read our rules and click the button below to verify yourself instantly.\n",
               "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
-              "✅ **Instant Access:** Unlocks all server text & voice channels.",
-              "🛡️ **Automated Security:** Powered by LUNA Web Matrix."
+              "<a:AI_verify_certified_owo_lol_anim:1553468976338567259> **Instant Access:** Unlocks all server text & voice channels.",
+              "<:773429modshieldicon:1530842211116253224> **Automated Security:** Powered by LUNA Web Matrix."
             ].join('\n'),
             footer: { text: "LUNA Verification System" },
             timestamp: new Date().toISOString()
@@ -300,7 +328,7 @@ export default async function handler(req, res) {
                 style: 3, // Green
                 label: "Verify & Get Access",
                 custom_id: `verify_member_${roleId || 'default'}`,
-                emoji: { name: "✅" }
+                emoji: { name: "AI_verify_certified_owo_lol_anim", id: "1553468976338567259", animated: true }
               }
             ]
           }

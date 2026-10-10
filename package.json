@@ -1,0 +1,16 @@
+{
+  "name": "luna-discord-dashboard",
+  "version": "2.5.0",
+  "type": "module",
+  "description": "Next-Gen 3D Web Dashboard & A-to-Z Server Management Center for LUNA Discord Bot",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.x"
+  }
+}

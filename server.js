@@ -91,26 +91,27 @@ const server = http.createServer(async (req, res) => {
     req.body = {};
   }
 
-  // Routing API Endpoints
-  if (pathname === '/api/auth') {
+  // Routing API Endpoints (supports both /api/x and /api/x.js)
+  const cleanPath = pathname.endsWith('.js') ? pathname.slice(0, -3) : pathname;
+  if (cleanPath === '/api/auth') {
     return authHandler(req, res);
   }
-  if (pathname === '/api/callback') {
+  if (cleanPath === '/api/callback') {
     return callbackHandler(req, res);
   }
-  if (pathname === '/api/guilds') {
+  if (cleanPath === '/api/guilds') {
     return guildsHandler(req, res);
   }
-  if (pathname === '/api/channels') {
+  if (cleanPath === '/api/channels') {
     return channelsHandler(req, res);
   }
-  if (pathname === '/api/settings') {
+  if (cleanPath === '/api/settings') {
     return settingsHandler(req, res);
   }
-  if (pathname === '/api/discord-action') {
+  if (cleanPath === '/api/discord-action') {
     return discordActionHandler(req, res);
   }
-  if (pathname === '/api/roles') {
+  if (cleanPath === '/api/roles') {
     return rolesHandler(req, res);
   }
 

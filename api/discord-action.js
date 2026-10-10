@@ -2,7 +2,7 @@
 // VERCEL SERVERLESS DIRECT DISCORD ACTION DISPATCHER (ADVANCED ENGINE)
 // ==========================================================================
 
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN || "MTU1ODE5MzQxNjkwNTY5NTI2Mg.GdR84P.ZYZPUOb8BsZEUG9A1UA3zN3uet0wyFOb3SvADs";
+const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

@@ -2,7 +2,7 @@
 // VERCEL SERVERLESS AUTHENTICATION & SECURITY ENDPOINT
 // ==========================================================================
 
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN || "MTU1ODE5MzQxNjkwNTY5NTI2Mg.GdR84P.ZYZPUOb8BsZEUG9A1UA3zN3uet0wyFOb3SvADs";
+const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const CLIENT_ID = process.env.APPLICATION_ID || "1558193416905695262";
 const CLIENT_SECRET = process.env.CLIENT_SECRET || "";
 const ADMIN_PASSKEY = process.env.ADMIN_PASSKEY || "luna2026";

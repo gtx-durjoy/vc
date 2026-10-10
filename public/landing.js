@@ -14,7 +14,7 @@ function closeLoginModal() {
 
 async function loginWithDiscord() {
   try {
-    const resp = await fetch('/api/auth?action=login-url');
+    const resp = await fetch('/api/auth.js?action=login-url');
     const data = await resp.json();
     if (data.url) {
       window.location.href = data.url;
@@ -32,7 +32,7 @@ async function handlePasskeyLogin(e) {
   if (!passkey) return;
 
   try {
-    const resp = await fetch('/api/auth?action=passkey-login', {
+    const resp = await fetch('/api/auth.js?action=passkey-login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ passkey, username: "Durjoy (Server Master)" })

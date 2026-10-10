@@ -323,7 +323,7 @@ async function initDashboard() {
   const token = localStorage.getItem('luna_auth_token');
 
   try {
-    const resp = await fetch('/api/auth?action=me', {
+    const resp = await fetch('/api/auth.js?action=me', {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
 
@@ -361,7 +361,7 @@ function renderUserProfile() {
 function handleLogout() {
   playCyberSound('click');
   localStorage.removeItem('luna_auth_token');
-  fetch('/api/auth?action=logout');
+  fetch('/api/auth.js?action=logout');
   window.location.href = '/';
 }
 
@@ -373,7 +373,7 @@ async function loadGuilds() {
   const serverSelect = document.getElementById('server-select');
 
   try {
-    const resp = await fetch('/api/guilds', {
+    const resp = await fetch('/api/guilds.js', {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
     const data = await resp.json();
@@ -441,7 +441,7 @@ function updateServerHeader() {
 async function loadChannels(guildId) {
   const token = localStorage.getItem('luna_auth_token');
   try {
-    const resp = await fetch(`/api/channels?guildId=${guildId}`, {
+    const resp = await fetch(`/api/channels.js?guildId=${guildId}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
     const data = await resp.json();
@@ -516,7 +516,7 @@ function setDefaultChannel(elementId, preferredKeywords) {
 
 async function loadRoles(guildId) {
   try {
-    const resp = await fetch(`/api/roles?guildId=${guildId}`);
+    const resp = await fetch(`/api/roles.js?guildId=${guildId}`);
     const data = await resp.json();
 
     if (data.success && Array.isArray(data.roles)) {
@@ -541,7 +541,7 @@ async function loadRoles(guildId) {
 
 async function loadGuildSettings(guildId) {
   try {
-    const resp = await fetch(`/api/settings?guildId=${guildId}`);
+    const resp = await fetch(`/api/settings.js?guildId=${guildId}`);
     const data = await resp.json();
 
     if (data.success && data.settings) {
@@ -626,7 +626,7 @@ async function saveWelcomeSettings() {
   if (!channelId) return showToast("Please select a welcome channel!", true);
 
   try {
-    const resp = await fetch('/api/settings', {
+    const resp = await fetch('/api/settings.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -666,7 +666,7 @@ async function dispatchWelcomeTest() {
   showToast("🚀 Dispatching Luxury Welcome Card to Discord...");
 
   try {
-    const resp = await fetch('/api/discord-action', {
+    const resp = await fetch('/api/discord-action.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -710,7 +710,7 @@ async function saveLeaveSettings() {
   const bannerUrl = document.getElementById('leave-banner-input').value;
 
   try {
-    const resp = await fetch('/api/settings', {
+    const resp = await fetch('/api/settings.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -745,7 +745,7 @@ async function dispatchLeaveTest() {
   showToast("🚀 Dispatching Leave Log to Discord...");
 
   try {
-    const resp = await fetch('/api/discord-action', {
+    const resp = await fetch('/api/discord-action.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -802,7 +802,7 @@ async function deployVerificationPanel() {
   showToast("⚡ Deploying Verification Portal to Discord...");
 
   try {
-    const resp = await fetch('/api/discord-action', {
+    const resp = await fetch('/api/discord-action.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -849,7 +849,7 @@ async function deployTicketPanel() {
   showToast("⚡ Deploying Ticket Generator to Discord...");
 
   try {
-    const resp = await fetch('/api/discord-action', {
+    const resp = await fetch('/api/discord-action.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -906,7 +906,7 @@ async function launchGiveaway() {
   showToast(`🎉 Launching Giveaway for '${prize}' in Discord...`);
 
   try {
-    const resp = await fetch('/api/discord-action', {
+    const resp = await fetch('/api/discord-action.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -976,7 +976,7 @@ async function publishAnnouncement() {
   showToast("📢 Publishing Announcement to Discord...");
 
   try {
-    const resp = await fetch('/api/discord-action', {
+    const resp = await fetch('/api/discord-action.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1012,7 +1012,7 @@ async function applySlowmode() {
   showToast("🛡️ Applying slowmode cooldown to channel...");
 
   try {
-    const resp = await fetch('/api/discord-action', {
+    const resp = await fetch('/api/discord-action.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1045,7 +1045,7 @@ async function triggerLockdown() {
   showToast("🚨 Broadcasting Emergency Lockdown Alert...");
 
   try {
-    const resp = await fetch('/api/discord-action', {
+    const resp = await fetch('/api/discord-action.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

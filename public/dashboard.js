@@ -140,60 +140,58 @@ function initThreeBackground() {
   renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   container.appendChild(renderer3D.domElement);
 
-  // 1. Central Holographic Torus Ring
+  // 1. Central Crimson Torus Ring
   const torusGeo = new THREE.TorusGeometry(32, 1.2, 16, 100);
   const torusMat = new THREE.MeshBasicMaterial({
-    color: 0x5865F2,
+    color: 0xff2a2a,
     wireframe: true,
     transparent: true,
-    opacity: 0.18
+    opacity: 0.25
   });
   mainTorus = new THREE.Mesh(torusGeo, torusMat);
   scene3D.add(mainTorus);
 
-  // 2. Inner Neon Cyber Lattice
+  // 2. Inner Crimson Lattice
   const icosaGeo = new THREE.IcosahedronGeometry(18, 1);
   const icosaMat = new THREE.MeshBasicMaterial({
-    color: 0x00F0FF,
+    color: 0x960018,
     wireframe: true,
     transparent: true,
-    opacity: 0.15
+    opacity: 0.2
   });
   const icosaMesh = new THREE.Mesh(icosaGeo, icosaMat);
   mainTorus.add(icosaMesh);
 
-  // 3. Multi-Colored Floating Particle Starfield
-  const particleCount = 1200;
+  // 3. Floating Crimson Ember Particle System
+  const particleCount = 1400;
   const particleGeo = new THREE.BufferGeometry();
   const positions = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
 
-  const colorChoices = [
-    new THREE.Color(0x00F0FF), // Neon Cyan
-    new THREE.Color(0x5865F2), // Blurple
-    new THREE.Color(0x9B59B6), // Purple
-    new THREE.Color(0x57F287)  // Emerald
-  ];
+  const emberColor1 = new THREE.Color(0xff2a2a);
+  const emberColor2 = new THREE.Color(0xff6666);
+  const emberColor3 = new THREE.Color(0x960018);
 
   for (let i = 0; i < particleCount; i++) {
     positions[i * 3] = (Math.random() - 0.5) * 350;
     positions[i * 3 + 1] = (Math.random() - 0.5) * 350;
     positions[i * 3 + 2] = (Math.random() - 0.5) * 250;
 
-    const chosenColor = colorChoices[Math.floor(Math.random() * colorChoices.length)];
-    colors[i * 3] = chosenColor.r;
-    colors[i * 3 + 1] = chosenColor.g;
-    colors[i * 3 + 2] = chosenColor.b;
+    const r = Math.random();
+    const c = r > 0.6 ? emberColor1 : (r > 0.3 ? emberColor2 : emberColor3);
+    colors[i * 3] = c.r;
+    colors[i * 3 + 1] = c.g;
+    colors[i * 3 + 2] = c.b;
   }
 
   particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
   const particleMat = new THREE.PointsMaterial({
-    size: 2.2,
+    size: 2.8,
     vertexColors: true,
     transparent: true,
-    opacity: 0.7,
+    opacity: 0.8,
     blending: THREE.AdditiveBlending
   });
 
@@ -1059,6 +1057,11 @@ async function triggerLockdown() {
     if (data.success) {
       playCyberSound('dispatch');
       showToast("🚨 EMERGENCY LOCKDOWN ALERT SENT TO DISCORD!");
+      const lockStatus = document.getElementById('matrix-lockdown-status');
+      if (lockStatus) {
+        lockStatus.textContent = "LOCKED";
+        lockStatus.style.color = "var(--crimson-danger)";
+      }
     } else {
       throw new Error(data.error);
     }
@@ -1066,6 +1069,67 @@ async function triggerLockdown() {
     playCyberSound('error');
     showToast("Failed: " + err.message, true);
   }
+}
+
+async function triggerUnlockdown() {
+  playCyberSound('click');
+  const channelId = document.getElementById('lockdown-channel-select')?.value;
+  if (!channelId) return showToast("Select an alert channel first!", true);
+
+  showToast("🔓 Lifting Emergency Server Lockdown...");
+
+  try {
+    const resp = await fetch('/api/discord-action.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'unlockdown',
+        channelId: channelId,
+        data: {}
+      })
+    });
+
+    const data = await resp.json();
+    if (data.success) {
+      playCyberSound('success');
+      showToast("🔓 SERVER LOCKDOWN LIFTED & NORMAL ACCESS RESTORED!");
+      const lockStatus = document.getElementById('matrix-lockdown-status');
+      if (lockStatus) {
+        lockStatus.textContent = "NORMAL";
+        lockStatus.style.color = "var(--text-white)";
+      }
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (err) {
+    playCyberSound('error');
+    showToast("Failed: " + err.message, true);
+  }
+}
+
+function handleSecurityToggle(module, enabled) {
+  const moduleNames = {
+    anti_nuke_enabled: "Anti-Nuke Rogue Admin Shield",
+    anti_raid_enabled: "Anti-Raid Mass Join Gate",
+    anti_spam_enabled: "DDoS Chat Flood & Mention Shield"
+  };
+  const name = moduleNames[module] || module;
+  const status = enabled ? "ARMED (Active)" : "DISABLED";
+  playCyberSound(enabled ? 'success' : 'click');
+  showToast(`🛡️ ${name} is now ${status}!`);
+
+  const list = document.getElementById('security-logs-list');
+  if (list) {
+    const item = document.createElement('div');
+    item.className = 'log-item';
+    item.innerHTML = `<span class="log-action">⚙️ ${name} ${status}</span><span class="log-time">Just Now</span>`;
+    list.prepend(item);
+  }
+}
+
+function refreshSecurityMatrix() {
+  playCyberSound('boot');
+  showToast("🛡️ Security Matrix synchronized with bot engine!");
 }
 
 // ==========================================================================
@@ -1105,5 +1169,91 @@ function showToast(message, isError = false) {
   }, 4200);
 }
 
+// ==========================================================================
+// CUSTOM CURSOR & PARTICLES (durjoyxcheat.bond style)
+// ==========================================================================
+function initCursor() {
+  const cursorDot = document.querySelector('.cursor-dot');
+  const cursorOutline = document.querySelector('.cursor-outline');
+  const particlesContainer = document.getElementById('particles');
+
+  if (!cursorDot || !cursorOutline) return;
+
+  if (window.matchMedia("(pointer: fine)").matches) {
+    window.addEventListener('mousemove', (e) => {
+      const posX = e.clientX;
+      const posY = e.clientY;
+
+      cursorDot.style.left = `${posX}px`;
+      cursorDot.style.top = `${posY}px`;
+
+      cursorOutline.animate({
+        left: `${posX}px`,
+        top: `${posY}px`
+      }, { duration: 400, fill: "forwards" });
+
+      if (particlesContainer && Math.random() > 0.45) {
+        const p = document.createElement('div');
+        p.className = 'cursor-particle';
+        p.style.left = `${posX}px`;
+        p.style.top = `${posY}px`;
+        particlesContainer.appendChild(p);
+
+        setTimeout(() => {
+          p.style.transition = 'all 0.6s ease';
+          p.style.transform = 'translateY(15px) scale(0)';
+          p.style.opacity = '0';
+          setTimeout(() => p.remove(), 600);
+        }, 20);
+      }
+    });
+
+    const clickables = document.querySelectorAll('a, button, select, input, textarea, .side-tab-btn, .config-card');
+    clickables.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursorOutline.style.width = '55px';
+        cursorOutline.style.height = '55px';
+        cursorOutline.style.backgroundColor = 'rgba(255, 42, 42, 0.15)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursorOutline.style.width = '40px';
+        cursorOutline.style.height = '40px';
+        cursorOutline.style.backgroundColor = 'transparent';
+      });
+    });
+  } else {
+    cursorDot.style.display = 'none';
+    cursorOutline.style.display = 'none';
+  }
+}
+
+function initSecurityToast() {
+  const toast = document.getElementById('security-toast');
+  if (!toast) return;
+
+  const showSecurityNotice = () => {
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2800);
+  };
+
+  document.addEventListener('contextmenu', (e) => {
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      showSecurityNotice();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j'))) {
+      showSecurityNotice();
+    }
+  });
+}
+
 // Boot up dashboard on window load
-window.addEventListener('DOMContentLoaded', initDashboard);
+window.addEventListener('DOMContentLoaded', () => {
+  initDashboard();
+  initCursor();
+  initSecurityToast();
+});

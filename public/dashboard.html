@@ -3,15 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LUNA Server Console • Ultra 3D Web Dashboard</title>
+  <title>LUNA Server Console • Dark Obsidian 3D Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- Three.js for Ultra 3D WebGL Background & Holographic Visuals -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Three.js for Ultra 3D WebGL Background & Floating Embers -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="dashboard-page">
+  <!-- Custom Glowing Cursor & Particles -->
+  <div id="particles"></div>
+  <div class="cursor-dot"></div>
+  <div class="cursor-outline"></div>
+
+  <!-- Security Warning Toast -->
+  <div id="security-toast">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff2a2a" stroke-width="2">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+      <path d="M7 11V7a5 5 0 0110 0v4"></path>
+    </svg>
+    <div>
+      <strong style="color: #ff2a2a; display: block; font-size: 0.95rem;">Access Protected</strong>
+      <span style="color: #86868B; font-size: 0.8rem;">LUNA Enterprise Defense Matrix Active</span>
+    </div>
+  </div>
+
   <!-- Three.js 3D WebGL Canvas Layer -->
   <div id="dash-webgl-canvas-container"></div>
   <div class="ambient-glow glow-1"></div>
@@ -25,8 +42,8 @@
         <a href="/" class="brand-link">
           <div class="brand-badge"><span class="pulsing-dot"></span></div>
           <div class="brand-text">
-            <span class="brand-title">LUNA</span>
-            <span class="brand-tag">3D CONSOLE • ULTRA</span>
+            <span class="brand-title">LUNA.</span>
+            <span class="brand-tag">SECURITY MATRIX • CONSOLE</span>
           </div>
         </a>
       </div>
@@ -100,7 +117,8 @@
           <span class="tab-icon">📢</span> Embed Broadcaster
         </button>
         <button class="side-tab-btn" onclick="switchDashTab('moderation')">
-          <span class="tab-icon">🚨</span> Emergency Defense
+          <span class="tab-icon">🛡️</span> Security Matrix
+          <span class="pill-new" style="background: linear-gradient(135deg, #ff2a2a, #960018);">SHIELD</span>
         </button>
         <button class="side-tab-btn" onclick="switchDashTab('bot')">
           <span class="tab-icon">💎</span> Diagnostics & 3D Core
@@ -148,72 +166,51 @@
             </div>
 
             <div class="form-group">
-              <label for="chat-channel-select">💬 Main Community Chat Channel:</label>
-              <select id="chat-channel-select" class="dash-select" onchange="updateWelcomePreview()">
-                <option value="">Select main chat channel...</option>
-              </select>
-              <span class="hint">Mentioned inside the embed as the recommended place to chat</span>
-            </div>
-
-            <div class="form-group">
-              <label for="rules-channel-select">📜 Server Rules Channel:</label>
-              <select id="rules-channel-select" class="dash-select" onchange="updateWelcomePreview()">
+              <label for="welcome-rules-select">📜 Rules Channel (Mention in Card):</label>
+              <select id="welcome-rules-select" class="dash-select">
                 <option value="">Select rules channel...</option>
               </select>
-              <span class="hint">Mentioned as the guidelines channel</span>
             </div>
 
             <div class="form-group">
-              <label for="welcome-banner-input">🖼️ Animated Banner URL (GIF/Image):</label>
-              <input type="text" id="welcome-banner-input" value="https://media.giphy.com/media/qXdb9xFp3cqYnqQ6RI/giphy.gif" class="dash-input" oninput="updateWelcomePreview()">
+              <label for="welcome-chat-select">💬 Main Chat Channel (Mention in Card):</label>
+              <select id="welcome-chat-select" class="dash-select">
+                <option value="">Select general chat...</option>
+              </select>
             </div>
 
-            <div class="preset-buttons">
-              <span class="preset-label">Quick Banner Presets:</span>
-              <button class="preset-pill" onclick="setWelcomeBanner('https://media.giphy.com/media/qXdb9xFp3cqYnqQ6RI/giphy.gif')">Cyber Anime</button>
-              <button class="preset-pill" onclick="setWelcomeBanner('https://media.giphy.com/media/l41lI4bYmcsPJX9Go/giphy.gif')">Neon Grid</button>
-              <button class="preset-pill" onclick="setWelcomeBanner('https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif')">Luxury Gold</button>
+            <div class="form-group">
+              <label for="welcome-banner-input">🖼️ GIF / Image Banner URL:</label>
+              <input type="text" id="welcome-banner-input" placeholder="https://media.giphy.com/media/.../giphy.gif" value="https://media.giphy.com/media/qXdb9xFp3cqYnqQ6RI/giphy.gif" class="dash-input" oninput="updateWelcomePreview()">
             </div>
           </div>
 
-          <!-- Live 3D Embed Preview -->
+          <!-- Real-Time Discord Card Preview -->
           <div class="preview-card glass-panel card-3d-tilt">
             <div class="preview-header">
               <span class="pulse-dot"></span>
-              <span>LIVE CARD PREVIEW • 3D INTERACTIVE TILT</span>
+              <span>LIVE DISCORD EMBED PREVIEW</span>
             </div>
 
-            <div class="discord-card-preview" id="dash-welcome-card">
-              <div class="mockup-header">
-                <div class="bot-avatar-wrapper">
-                  <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="LUNA" class="bot-avatar">
-                  <span class="bot-badge">APP</span>
-                </div>
-                <div class="bot-info-meta">
-                  <span class="bot-name">LUNA</span>
-                  <span class="verified-system">SYSTEM</span>
-                  <span class="timestamp-mock">Just now</span>
-                </div>
-              </div>
-
-              <div class="discord-top-content">
-                <span class="anim-emoji">✨</span> Welcome <span class="mention-tag">@NewMember</span>!
-              </div>
-
-              <div class="discord-embed-body">
-                <div class="embed-color-bar"></div>
+            <div class="discord-card-preview">
+              <div class="discord-embed-body" id="prev-welcome-body">
+                <div class="embed-color-bar" id="prev-welcome-bar" style="background: #ff2a2a;"></div>
                 <div class="embed-main-content">
-                  <div class="embed-title">👑 Welcome to <strong id="prev-welcome-guild-name">Server</strong> 👑</div>
-                  <div class="embed-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-                  <div class="embed-body-lines">
-                    <div class="embed-line highlight-line">🏹 <strong>WELCOME TO THE SERVER</strong> 👋 <span class="mention-tag">@NewMember</span></div>
-                    <div class="embed-line">✅ <strong>Enjoy Chatting In:</strong> <span class="channel-tag" id="prev-w-chat">#main-chat</span> 💬</div>
-                    <div class="embed-line">✅ <strong>Check Server Rules:</strong> <span class="channel-tag" id="prev-w-rules">#rules</span> 📜</div>
-                    <div class="embed-line">✅ <strong>Important News & Updates:</strong> <span class="channel-tag">#announcements</span> 📢</div>
+                  <div class="embed-title" id="prev-welcome-title">👑 Welcome to PLAY HEX 👑</div>
+                  <div class="embed-desc-text" id="prev-welcome-desc">
+                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>
+                    ➔ <b>WELCOME TO THE SERVER</b> 🌊<br>
+                    ✨ <b>Enjoy Chatting In:</b> <span class="mention-tag">#general-chat</span> ➔<br>
+                    ✨ <b>Check Server Rules:</b> <span class="mention-tag">#rules</span> ➔<br>
+                    ✨ <b>Important News & Updates:</b> 📢<br>
+                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>
+                    💀 You are a valued member of our elite community!
                   </div>
-                  <div class="embed-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
                   <div class="embed-banner-container">
                     <img id="prev-welcome-banner-img" src="https://media.giphy.com/media/qXdb9xFp3cqYnqQ6RI/giphy.gif" alt="Banner" class="embed-banner-gif">
+                  </div>
+                  <div class="embed-footer-meta">
+                    <span>LUNA Console • Web Management Suite</span>
                   </div>
                 </div>
               </div>
@@ -226,8 +223,8 @@
       <section id="tab-leave-content" class="dash-section-pane">
         <div class="pane-header">
           <div>
-            <h2>🚪 Member Departure / Leave Log System</h2>
-            <p>Automatically notify when someone exits your community with elegant farewell cards.</p>
+            <h2>🚪 Departure & Leave Logger</h2>
+            <p>Publish animated farewell notices when a member departs to track server activity.</p>
           </div>
           <div class="pane-actions">
             <button onclick="saveLeaveSettings()" class="btn btn-primary">
@@ -242,16 +239,16 @@
         <div class="pane-grid">
           <div class="config-card glass-panel card-3d-tilt">
             <h3 class="card-title">Leave Logging Settings</h3>
-
+            
             <div class="form-group">
               <label for="leave-channel-select">📢 Departure Log Channel:</label>
               <select id="leave-channel-select" class="dash-select">
-                <option value="">Select log channel...</option>
+                <option value="">Select departure channel...</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label for="leave-banner-input">🖼️ Farewell Image/GIF Banner URL:</label>
+              <label for="leave-banner-input">🖼️ Farewell GIF / Image Banner URL:</label>
               <input type="text" id="leave-banner-input" value="https://media.giphy.com/media/26u4b45b8KlgAB7iM/giphy.gif" class="dash-input" oninput="updateLeavePreview()">
             </div>
           </div>
@@ -259,34 +256,23 @@
           <div class="preview-card glass-panel card-3d-tilt">
             <div class="preview-header">
               <span class="pulse-dot"></span>
-              <span>LIVE FAREWELL PREVIEW</span>
+              <span>LIVE DEPARTURE EMBED PREVIEW</span>
             </div>
 
-            <div class="discord-card-preview" id="dash-leave-card">
-              <div class="mockup-header">
-                <div class="bot-avatar-wrapper">
-                  <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="LUNA" class="bot-avatar">
-                  <span class="bot-badge">APP</span>
-                </div>
-                <div class="bot-info-meta">
-                  <span class="bot-name">LUNA</span>
-                  <span class="verified-system">SYSTEM</span>
-                  <span class="timestamp-mock">Just now</span>
-                </div>
-              </div>
-
-              <div class="discord-embed-body leave-embed">
-                <div class="embed-color-bar leave-bar"></div>
+            <div class="discord-card-preview">
+              <div class="discord-embed-body leave-embed" id="prev-leave-body">
+                <div class="embed-color-bar leave-bar" style="background: #ff2a2a;"></div>
                 <div class="embed-main-content">
-                  <div class="embed-title">🚪 Member Departed</div>
-                  <div class="embed-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-                  <div class="embed-body-lines">
-                    <div class="embed-line">👋 <strong>A member has departed from our server.</strong></div>
-                    <div class="embed-line">❌ We wish them the best on their journey!</div>
+                  <div class="embed-title">🌊 Member Left • PLAY HEX</div>
+                  <div class="embed-desc-text">
+                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>
+                    ➔ <b>A member has departed from the server.</b> 🌊<br>
+                    ❌ We hope you had a wonderful time with us.<br>
+                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>
+                    💀 Farewell from all of us!
                   </div>
-                  <div class="embed-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
                   <div class="embed-banner-container">
-                    <img id="prev-leave-banner-img" src="https://media.giphy.com/media/26u4b45b8KlgAB7iM/giphy.gif" alt="Leave Banner" class="embed-banner-gif">
+                    <img id="prev-leave-banner-img" src="https://media.giphy.com/media/26u4b45b8KlgAB7iM/giphy.gif" alt="Banner" class="embed-banner-gif">
                   </div>
                 </div>
               </div>
@@ -295,213 +281,139 @@
         </div>
       </section>
 
-      <!-- 3. AUTO-ROLES & MEMBER VERIFICATION (NEW!) -->
+      <!-- 3. AUTO ROLES TAB -->
       <section id="tab-roles-content" class="dash-section-pane">
         <div class="pane-header">
           <div>
-            <h2>🛡️ Auto-Roles & Verification Portal</h2>
-            <p>Assign roles automatically when members join or deploy an interactive 1-Click Verification panel with buttons directly to Discord.</p>
+            <h2>🛡️ Auto-Roles & Member Verification</h2>
+            <p>Automatically grant verified membership roles when new users join your Discord community.</p>
           </div>
           <div class="pane-actions">
-            <button onclick="deployVerificationPanel()" class="btn btn-glow">
-              <span>⚡ Deploy Verification to Discord</span>
+            <button onclick="saveRoleSettings()" class="btn btn-primary">
+              <span>💾 Save Role Settings</span>
             </button>
           </div>
         </div>
 
         <div class="pane-grid">
           <div class="config-card glass-panel card-3d-tilt">
-            <h3 class="card-title">Verification & Roles Setup</h3>
+            <h3 class="card-title">Join Autorole Assignment</h3>
+            <p class="card-desc">Assign this role automatically upon member entry. Ensure the bot's role is positioned ABOVE this role.</p>
 
             <div class="form-group">
-              <label for="verify-channel-select">🎯 Verification Target Channel:</label>
-              <select id="verify-channel-select" class="dash-select">
-                <option value="">Select verification channel...</option>
+              <label for="autorole-select">🎭 Select Default Member Role:</label>
+              <select id="autorole-select" class="dash-select">
+                <option value="">Select a role from your server...</option>
               </select>
-            </div>
-
-            <div class="form-group">
-              <label for="verify-role-select">👑 Verified Member Role to Grant:</label>
-              <select id="verify-role-select" class="dash-select" onchange="updateVerifyPreview()">
-                <option value="">Loading server roles...</option>
-              </select>
-              <span class="hint">Role automatically awarded when user clicks the verification button</span>
-            </div>
-
-            <div class="form-group">
-              <label for="verify-title-input">📝 Verification Panel Title:</label>
-              <input type="text" id="verify-title-input" value="Server Member Verification Portal" class="dash-input" oninput="updateVerifyPreview()">
-            </div>
-
-            <div class="form-group">
-              <label for="verify-desc-input">📄 Instructions Description:</label>
-              <textarea id="verify-desc-input" rows="4" class="dash-textarea" oninput="updateVerifyPreview()">Welcome to the server! To gain full access to all chat, voice, and media channels, click the button below to verify your account.</textarea>
             </div>
           </div>
 
-          <div class="preview-card glass-panel card-3d-tilt">
-            <div class="preview-header">
-              <span class="pulse-dot"></span>
-              <span>LIVE VERIFICATION PANEL PREVIEW</span>
-            </div>
-
-            <div class="discord-card-preview">
-              <div class="mockup-header">
-                <div class="bot-avatar-wrapper">
-                  <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="LUNA" class="bot-avatar">
-                  <span class="bot-badge">APP</span>
-                </div>
-                <div class="bot-info-meta">
-                  <span class="bot-name">LUNA</span>
-                  <span class="verified-system">VERIFY</span>
-                  <span class="timestamp-mock">Just now</span>
-                </div>
-              </div>
-
-              <div class="discord-embed-body" style="border-left: 4px solid var(--emerald-success);">
-                <div class="embed-main-content">
-                  <div class="embed-title" id="prev-verify-title">🛡️ Server Member Verification Portal</div>
-                  <div class="embed-desc-text" id="prev-verify-desc">Welcome to the server! Click below to verify.</div>
-                  <div class="embed-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-                  <div class="embed-line">✅ <strong>Instant Unlock:</strong> Grants <span class="role-badge" id="prev-verify-role-badge">@VERIFIED</span> role.</div>
-                </div>
-              </div>
-
-              <!-- Interactive Mock Button -->
-              <div class="discord-button-row">
-                <button class="mock-btn mock-btn-success">
-                  <span>✅</span> Verify & Get Access
-                </button>
-              </div>
-            </div>
+          <div class="config-card glass-panel card-3d-tilt">
+            <h3 class="card-title">Security & Hierarchy Checklist</h3>
+            <ul style="color: var(--text-secondary); line-height: 2; padding-left: 20px; font-size: 0.92rem;">
+              <li>Bot's top role must be <b>above</b> the target role in Server Settings > Roles.</li>
+              <li>Bot requires <code>MANAGE_ROLES</code> permission.</li>
+              <li>Bots do not receive user autoroles to prevent token exploits.</li>
+            </ul>
           </div>
         </div>
       </section>
 
-      <!-- 4. SUPPORT TICKET PORTAL (NEW!) -->
+      <!-- 4. TICKETS TAB -->
       <section id="tab-tickets-content" class="dash-section-pane">
         <div class="pane-header">
           <div>
-            <h2>🎫 Interactive Support Ticket Portal</h2>
-            <p>Deploy private support ticket generators straight to your server. Users click the button to open direct assistance.</p>
-          </div>
-          <div class="pane-actions">
-            <button onclick="deployTicketPanel()" class="btn btn-glow">
-              <span>⚡ Deploy Ticket Panel to Discord</span>
-            </button>
+            <h2>🎫 Support Ticket Panels</h2>
+            <p>Deploy interactive ticket creation buttons in Discord with zero slash commands.</p>
           </div>
         </div>
 
         <div class="pane-grid">
           <div class="config-card glass-panel card-3d-tilt">
-            <h3 class="card-title">Support Ticket Configuration</h3>
-
+            <h3 class="card-title">Deploy Interactive Ticket Panel</h3>
             <div class="form-group">
-              <label for="ticket-channel-select">🎯 Ticket Target Channel:</label>
+              <label for="ticket-channel-select">📢 Target Channel for Ticket Button:</label>
               <select id="ticket-channel-select" class="dash-select">
-                <option value="">Select ticket channel...</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="ticket-title-input">📝 Ticket Panel Title:</label>
-              <input type="text" id="ticket-title-input" value="Support & Assistance Portal" class="dash-input" oninput="updateTicketPreview()">
-            </div>
-
-            <div class="form-group">
-              <label for="ticket-desc-input">📄 Description / Instructions:</label>
-              <textarea id="ticket-desc-input" rows="4" class="dash-textarea" oninput="updateTicketPreview()">Need help, want to claim a reward, or have a question for management? Click the button below to initialize a confidential private ticket channel with staff.</textarea>
-            </div>
-          </div>
-
-          <div class="preview-card glass-panel card-3d-tilt">
-            <div class="preview-header">
-              <span class="pulse-dot"></span>
-              <span>LIVE TICKET PANEL PREVIEW</span>
-            </div>
-
-            <div class="discord-card-preview">
-              <div class="mockup-header">
-                <div class="bot-avatar-wrapper">
-                  <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="LUNA" class="bot-avatar">
-                  <span class="bot-badge">APP</span>
-                </div>
-                <div class="bot-info-meta">
-                  <span class="bot-name">LUNA</span>
-                  <span class="verified-system">TICKETS</span>
-                  <span class="timestamp-mock">Just now</span>
-                </div>
-              </div>
-
-              <div class="discord-embed-body" style="border-left: 4px solid var(--primary-blurple);">
-                <div class="embed-main-content">
-                  <div class="embed-title" id="prev-ticket-title">🎫 Support & Assistance Portal</div>
-                  <div class="embed-desc-text" id="prev-ticket-desc">Click below to open a ticket.</div>
-                  <div class="embed-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-                  <div class="embed-line">🔒 <strong>Strict Privacy:</strong> Tickets are visible only to you and staff.</div>
-                </div>
-              </div>
-
-              <div class="discord-button-row">
-                <button class="mock-btn mock-btn-blurple">
-                  <span>📩</span> Create Ticket
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 5. LIVE GIVEAWAY LAUNCHER (NEW!) -->
-      <section id="tab-giveaways-content" class="dash-section-pane">
-        <div class="pane-header">
-          <div>
-            <h2>🎉 Live Giveaway Launcher</h2>
-            <p>Launch live prize giveaways with interactive entry buttons and automated countdown directly from the web.</p>
-          </div>
-          <div class="pane-actions">
-            <button onclick="launchGiveaway()" class="btn btn-glow">
-              <span>🎉 Launch Live Giveaway in Discord</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="pane-grid">
-          <div class="config-card glass-panel card-3d-tilt">
-            <h3 class="card-title">Giveaway Parameters</h3>
-
-            <div class="form-group">
-              <label for="giveaway-channel-select">🎯 Giveaway Channel:</label>
-              <select id="giveaway-channel-select" class="dash-select">
                 <option value="">Select channel...</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label for="giveaway-prize-input">🎁 Prize Name:</label>
-              <input type="text" id="giveaway-prize-input" value="Discord Nitro 1 Month Boost" class="dash-input" oninput="updateGiveawayPreview()">
+              <label for="ticket-panel-title">📝 Panel Title:</label>
+              <input type="text" id="ticket-panel-title" value="Support & Assistance Portal" class="dash-input">
             </div>
 
             <div class="form-group">
-              <label for="giveaway-duration-select">⏱️ Giveaway Duration:</label>
-              <select id="giveaway-duration-select" class="dash-select" onchange="updateGiveawayPreview()">
-                <option value="15">15 Minutes</option>
-                <option value="60" selected>1 Hour</option>
-                <option value="360">6 Hours</option>
-                <option value="1440">24 Hours (1 Day)</option>
-                <option value="4320">3 Days</option>
+              <label for="ticket-panel-desc">📄 Panel Description:</label>
+              <textarea id="ticket-panel-desc" rows="3" class="dash-textarea">Click the button below to initialize a confidential private ticket channel with server administrators.</textarea>
+            </div>
+
+            <button onclick="deployTicketPanel()" class="btn btn-glow" style="margin-top: 10px;">
+              <span>🚀 Deploy Ticket Panel to Discord</span>
+            </button>
+          </div>
+
+          <div class="preview-card glass-panel card-3d-tilt">
+            <div class="preview-header">
+              <span class="pulse-dot"></span>
+              <span>INTERACTIVE TICKET PREVIEW</span>
+            </div>
+            <div class="discord-card-preview">
+              <div class="discord-embed-body" style="border-left-color: #ff2a2a;">
+                <div class="embed-main-content">
+                  <div class="embed-title">📢 Support & Assistance Portal</div>
+                  <div class="embed-desc-text">
+                    Click the button below to initialize a confidential private ticket channel with staff.<br><br>
+                    🛡️ <b>Strict Privacy:</b> Only administrators can view your tickets.<br>
+                    🔥 <b>Fast Response:</b> Average response under 15 minutes.
+                  </div>
+                  <div class="discord-button-row">
+                    <button class="mock-btn mock-btn-blurple" style="background: #ff2a2a;">📩 Create Ticket</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. GIVEAWAYS TAB -->
+      <section id="tab-giveaways-content" class="dash-section-pane">
+        <div class="pane-header">
+          <div>
+            <h2>🎉 Live Giveaway Studio</h2>
+            <p>Launch interactive giveaways with animated buttons and automated winner selection directly from the web.</p>
+          </div>
+        </div>
+
+        <div class="pane-grid">
+          <div class="config-card glass-panel card-3d-tilt">
+            <h3 class="card-title">Launch Live Giveaway</h3>
+            <div class="form-group">
+              <label for="giveaway-channel-select">📢 Giveaway Channel:</label>
+              <select id="giveaway-channel-select" class="dash-select">
+                <option value="">Select giveaway channel...</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label for="giveaway-winners-select">👑 Number of Winners:</label>
-              <select id="giveaway-winners-select" class="dash-select" onchange="updateGiveawayPreview()">
-                <option value="1" selected>1 Winner</option>
-                <option value="2">2 Winners</option>
-                <option value="3">3 Winners</option>
-                <option value="5">5 Winners</option>
-              </select>
+              <label for="giveaway-prize-input">🎁 Prize:</label>
+              <input type="text" id="giveaway-prize-input" value="Discord Nitro 1 Month" class="dash-input">
             </div>
+
+            <div class="form-group">
+              <label for="giveaway-duration-input">⏱️ Duration (Minutes):</label>
+              <input type="number" id="giveaway-duration-input" value="60" min="1" class="dash-input">
+            </div>
+
+            <div class="form-group">
+              <label for="giveaway-winners-input">👑 Number of Winners:</label>
+              <input type="number" id="giveaway-winners-input" value="1" min="1" max="10" class="dash-input">
+            </div>
+
+            <button onclick="launchGiveaway()" class="btn btn-glow" style="margin-top: 10px;">
+              <span>🎉 Launch Giveaway to Discord</span>
+            </button>
           </div>
 
           <div class="preview-card glass-panel card-3d-tilt">
@@ -509,42 +421,28 @@
               <span class="pulse-dot"></span>
               <span>LIVE GIVEAWAY PREVIEW</span>
             </div>
-
             <div class="discord-card-preview">
-              <div class="mockup-header">
-                <div class="bot-avatar-wrapper">
-                  <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="LUNA" class="bot-avatar">
-                  <span class="bot-badge">APP</span>
-                </div>
-                <div class="bot-info-meta">
-                  <span class="bot-name">LUNA</span>
-                  <span class="verified-system">GIVEAWAY</span>
-                  <span class="timestamp-mock">Just now</span>
-                </div>
-              </div>
-
-              <div class="discord-embed-body" style="border-left: 4px solid #F1C40F;">
+              <div class="discord-embed-body" style="border-left-color: #F1C40F;">
                 <div class="embed-main-content">
-                  <div class="embed-title" id="prev-giveaway-title">🎉 GIVEAWAY: Discord Nitro 1 Month Boost</div>
-                  <div class="embed-desc-text">Click the button below to enter and compete!</div>
-                  <div class="embed-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-                  <div class="embed-line">⏱️ <strong>Ends In:</strong> <span class="tag-badge" id="prev-giveaway-time">1 Hour</span></div>
-                  <div class="embed-line">👑 <strong>Winners:</strong> <span class="tag-badge" id="prev-giveaway-winners">1 Winner</span></div>
-                  <div class="embed-line">💎 <strong>Hosted By:</strong> <span class="mention-tag">LUNA Web Studio</span></div>
+                  <div class="embed-title">💎 GIVEAWAY: Discord Nitro 1 Month</div>
+                  <div class="embed-desc-text">
+                    ➔ Click the button below to enter and compete for Nitro!<br>
+                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>
+                    ⏳ <b>Ends:</b> In 60 minutes<br>
+                    👑 <b>Winners:</b> 1<br>
+                    💎 <b>Hosted via:</b> LUNA Web Console
+                  </div>
+                  <div class="discord-button-row">
+                    <button class="mock-btn mock-btn-success">🎉 Join Giveaway</button>
+                  </div>
                 </div>
-              </div>
-
-              <div class="discord-button-row">
-                <button class="mock-btn mock-btn-success">
-                  <span>🎉</span> Join Giveaway (0)
-                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 6. EMBED BROADCASTER -->
+      <!-- 6. ANNOUNCE TAB -->
       <section id="tab-announce-content" class="dash-section-pane">
         <div class="pane-header">
           <div>
@@ -574,12 +472,12 @@
 
             <div class="form-group">
               <label for="announce-desc-input">📄 Message Content (Markdown Supported):</label>
-              <textarea id="announce-desc-input" rows="5" class="dash-textarea" oninput="updateAnnouncePreview()">We are excited to announce our brand new server features! Thank you to everyone for being a part of our journey.</textarea>
+              <textarea id="announce-desc-input" rows="5" class="dash-textarea" oninput="updateAnnouncePreview()">We are excited to announce our brand new server security features! Thank you to everyone for being a part of our journey.</textarea>
             </div>
 
             <div class="form-group">
               <label for="announce-color-input">🎨 Accent Embed Color:</label>
-              <input type="color" id="announce-color-input" value="#5865F2" class="dash-color" oninput="updateAnnouncePreview()">
+              <input type="color" id="announce-color-input" value="#ff2a2a" class="dash-color" oninput="updateAnnouncePreview()">
             </div>
 
             <div class="form-group">
@@ -596,10 +494,10 @@
 
             <div class="discord-card-preview">
               <div class="discord-embed-body" id="prev-announce-body">
-                <div class="embed-color-bar" id="prev-announce-bar" style="background: #5865F2;"></div>
+                <div class="embed-color-bar" id="prev-announce-bar" style="background: #ff2a2a;"></div>
                 <div class="embed-main-content">
                   <div class="embed-title" id="prev-announce-title">📢 Important Community Announcement</div>
-                  <div class="embed-desc-text" id="prev-announce-desc">We are excited to announce our brand new server features!</div>
+                  <div class="embed-desc-text" id="prev-announce-desc">We are excited to announce our brand new server security features!</div>
                   <div class="embed-banner-container" id="prev-announce-banner-box" style="display: none;">
                     <img id="prev-announce-banner-img" src="" alt="Banner" class="embed-banner-gif">
                   </div>
@@ -610,65 +508,148 @@
         </div>
       </section>
 
-      <!-- 7. EMERGENCY DEFENSE & SLOWMODE -->
+      <!-- 7. SECURITY MATRIX & DEFENSE (ADVANCED ENTERPRISE SUITE) -->
       <section id="tab-moderation-content" class="dash-section-pane">
         <div class="pane-header">
           <div>
-            <h2>🚨 Emergency Defense & Server Lockdown</h2>
-            <p>Control channel rate limits instantly and dispatch emergency security lockdown broadcasts with zero slash commands.</p>
+            <h2>🛡️ Security Matrix • Enterprise Defense Engine</h2>
+            <p>Real-time Anti-Nuke, Anti-Raid Join Gates, DDoS Chat Flood mitigation, and 1-Click Server Lockdown controls.</p>
+          </div>
+          <div class="pane-actions">
+            <button onclick="refreshSecurityMatrix()" class="btn btn-secondary">
+              <span>🔄 Refresh Matrix</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Security Metric Status Bar -->
+        <div class="security-status-hero">
+          <div class="security-stat-pill">
+            <span class="stat-label">Anti-Nuke Defense</span>
+            <div class="stat-value status-active-badge">
+              <span class="shield-dot"></span> ACTIVE
+            </div>
+            <span class="hint">Channels, Roles & Bans Guarded</span>
+          </div>
+          <div class="security-stat-pill">
+            <span class="stat-label">Anti-Raid Velocity</span>
+            <div class="stat-value status-active-badge">
+              <span class="shield-dot"></span> ACTIVE
+            </div>
+            <span class="hint">5 Joins/10s Threshold Gate</span>
+          </div>
+          <div class="security-stat-pill">
+            <span class="stat-label">DDoS Chat Flood</span>
+            <div class="stat-value status-active-badge">
+              <span class="shield-dot"></span> ACTIVE
+            </div>
+            <span class="hint">Velocity & Ping Spam Suppressed</span>
+          </div>
+          <div class="security-stat-pill">
+            <span class="stat-label">Lockdown Status</span>
+            <div class="stat-value" id="matrix-lockdown-status" style="color: var(--text-white);">
+              NORMAL
+            </div>
+            <span class="hint">Channels Unlocked</span>
           </div>
         </div>
 
         <div class="pane-grid">
-          <!-- Slowmode Control -->
+          <!-- Defense Module Toggles -->
           <div class="config-card glass-panel card-3d-tilt">
-            <h3 class="card-title">⏱️ Channel Slowmode Controller</h3>
-            <p class="card-desc">Set user cooldowns per message directly via Discord API.</p>
+            <h3 class="card-title">Active Defense Modules</h3>
 
-            <div class="form-group">
-              <label for="mod-channel-select">🎯 Select Channel to Configure:</label>
-              <select id="mod-channel-select" class="dash-select">
-                <option value="">Select channel...</option>
-              </select>
+            <div class="security-toggle-card">
+              <div class="toggle-info">
+                <h4>🛡️ Anti-Nuke Rogue Admin Shield</h4>
+                <p>Auto-bans rogue staff deleting channels, mass wiping roles, or inviting unauthorized bots.</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-anti-nuke" checked onchange="handleSecurityToggle('anti_nuke_enabled', this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
             </div>
 
-            <div class="form-group">
-              <label for="mod-slowmode-select">⏱️ Set Slowmode Cooldown:</label>
-              <select id="mod-slowmode-select" class="dash-select">
-                <option value="0">Off (0 seconds)</option>
-                <option value="5">5 Seconds</option>
-                <option value="10">10 Seconds</option>
-                <option value="30">30 Seconds</option>
-                <option value="60">1 Minute</option>
-                <option value="300">5 Minutes</option>
-                <option value="900">15 Minutes</option>
-              </select>
+            <div class="security-toggle-card">
+              <div class="toggle-info">
+                <h4>🚨 Anti-Raid Mass Join Gate</h4>
+                <p>Detects rapid token bot raids and automatically kicks accounts created under 3 days.</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-anti-raid" checked onchange="handleSecurityToggle('anti_raid_enabled', this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
             </div>
 
-            <button onclick="applySlowmode()" class="btn btn-primary" style="margin-top: 10px;">
-              <span>🛡️ Apply Slowmode Directly</span>
-            </button>
+            <div class="security-toggle-card">
+              <div class="toggle-info">
+                <h4>⚡ DDoS Chat Flood & Ping Shield</h4>
+                <p>Deletes chat floods (5+ msgs/3s) and timeouts offenders; blocks mass mention floods.</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-anti-spam" checked onchange="handleSecurityToggle('anti_spam_enabled', this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <!-- Slowmode Quick Tool -->
+            <div style="margin-top: 20px; border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+              <h4 style="font-family: var(--font-display); font-size: 1.05rem; margin-bottom: 12px;">⏱️ Quick Channel Slowmode</h4>
+              <div style="display: flex; gap: 10px;">
+                <select id="mod-channel-select" class="dash-select" style="flex: 2;">
+                  <option value="">Select channel...</option>
+                </select>
+                <select id="mod-slowmode-select" class="dash-select" style="flex: 1;">
+                  <option value="0">0s (Off)</option>
+                  <option value="5">5s</option>
+                  <option value="15">15s</option>
+                  <option value="60">1m</option>
+                </select>
+                <button onclick="applySlowmode()" class="btn btn-primary" style="padding: 10px 16px;">Apply</button>
+              </div>
+            </div>
           </div>
 
-          <!-- Emergency Lockdown -->
-          <div class="config-card glass-panel card-3d-tilt" style="border-color: rgba(237, 66, 69, 0.4);">
-            <h3 class="card-title" style="color: var(--crimson-danger);">🚨 Emergency Server Lockdown Alert</h3>
-            <p class="card-desc">Broadcast an immediate red alert warning to members during raids or emergencies.</p>
-
+          <!-- Security Audit & Incident Logs -->
+          <div class="config-card glass-panel card-3d-tilt">
+            <h3 class="card-title">Security Alert Channel & Incidents</h3>
+            
             <div class="form-group">
-              <label for="lockdown-channel-select">📢 Lockdown Target Channel:</label>
+              <label for="lockdown-channel-select">📢 Security Alert Dispatch Channel:</label>
               <select id="lockdown-channel-select" class="dash-select">
-                <option value="">Select channel...</option>
+                <option value="">Select alert channel...</option>
               </select>
+              <span class="hint">Real-time attack alarms and trigger logs will be broadcast here</span>
             </div>
 
-            <div class="form-group">
-              <label for="lockdown-reason-input">⚠️ Reason / Security Protocol Details:</label>
-              <input type="text" id="lockdown-reason-input" value="Suspected raid activity or unauthorized breach. Security lockdown initiated." class="dash-input">
+            <div style="margin-top: 20px;">
+              <h4 style="font-family: var(--font-display); font-size: 1rem; color: var(--text-white); margin-bottom: 8px;">Recent Defense Logs</h4>
+              <div class="security-logs-container" id="security-logs-list">
+                <div class="log-item">
+                  <span class="log-action">🛡️ System Initialized</span>
+                  <span class="log-time">Active & Monitoring</span>
+                </div>
+                <div class="log-item">
+                  <span class="log-action">🚨 Anti-Raid Threshold: 5 joins/10s</span>
+                  <span class="log-time">Sliding Window Ready</span>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
 
-            <button onclick="triggerLockdown()" class="btn btn-danger" style="margin-top: 10px;">
-              <span>🚨 BROADCAST EMERGENCY LOCKDOWN</span>
+        <!-- Emergency 1-Click Server Lockdown Banner -->
+        <div class="lockdown-emergency-banner">
+          <div class="lockdown-text">
+            <h3>🚨 EMERGENCY 1-CLICK SERVER LOCKDOWN</h3>
+            <p>During active attacks, click to instantly lock public message permissions across all channels for @everyone.</p>
+          </div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button onclick="triggerLockdown()" class="btn btn-lockdown-emergency">
+              <span>🚨 INITIATE LOCKDOWN</span>
+            </button>
+            <button onclick="triggerUnlockdown()" class="btn btn-unlockdown-emergency">
+              <span>🔓 RESTORE ACCESS</span>
             </button>
           </div>
         </div>
@@ -683,29 +664,29 @@
           </div>
         </div>
 
-        <div class="stats-grid">
-          <div class="metric-card glass-panel card-3d-tilt">
-            <div class="metric-val" style="color: var(--emerald-success);">LIVE 🟢</div>
-            <div class="metric-label">Operational Status</div>
+        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px;">
+          <div class="metric-card glass-panel card-3d-tilt" style="padding: 24px;">
+            <div class="metric-val" style="color: var(--emerald-success); font-family: var(--font-display); font-size: 1.8rem; font-weight: 700;">LIVE 🟢</div>
+            <div class="metric-label" style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">Operational Status</div>
           </div>
-          <div class="metric-card glass-panel card-3d-tilt">
-            <div class="metric-val">38</div>
-            <div class="metric-label">Global Slash Commands</div>
+          <div class="metric-card glass-panel card-3d-tilt" style="padding: 24px;">
+            <div class="metric-val" style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--text-white);">46</div>
+            <div class="metric-label" style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">Slash & Security Commands</div>
           </div>
-          <div class="metric-card glass-panel card-3d-tilt">
-            <div class="metric-val" id="stats-server-count">2</div>
-            <div class="metric-label">Connected Discord Guilds</div>
+          <div class="metric-card glass-panel card-3d-tilt" style="padding: 24px;">
+            <div class="metric-val" id="stats-server-count" style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--text-white);">2</div>
+            <div class="metric-label" style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">Connected Discord Guilds</div>
           </div>
-          <div class="metric-card glass-panel card-3d-tilt">
-            <div class="metric-val" style="color: var(--neon-cyan);">18ms</div>
-            <div class="metric-label">API Gateway Latency</div>
+          <div class="metric-card glass-panel card-3d-tilt" style="padding: 24px;">
+            <div class="metric-val" style="color: var(--accent); font-family: var(--font-display); font-size: 1.8rem; font-weight: 700;">14ms</div>
+            <div class="metric-label" style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">API Gateway Latency</div>
           </div>
         </div>
 
         <div class="holo-core-panel glass-panel card-3d-tilt" style="margin-top: 24px; padding: 28px; text-align: center;">
-          <h3 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 8px;">🌌 3D Holographic Quantum Core</h3>
-          <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 20px;">LUNA's 3D neural matrix runs continuously in WebGL, maintaining synchronization between Discord REST API and your web interface.</p>
-          <div id="holo-core-container" style="width: 100%; height: 320px; border-radius: 16px; overflow: hidden; background: radial-gradient(circle, rgba(18,20,32,0.8), #08090d);"></div>
+          <h3 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 8px; color: var(--text-white);">🌌 3D Holographic Quantum Core</h3>
+          <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 20px;">LUNA's 3D neural matrix runs continuously in WebGL, maintaining real-time synchronization between Discord REST API, Anti-Nuke defenses, and your web console.</p>
+          <div id="holo-core-container" style="width: 100%; height: 320px; border-radius: 16px; overflow: hidden; background: radial-gradient(circle, rgba(20,0,0,0.8), #030303);"></div>
         </div>
       </section>
     </main>

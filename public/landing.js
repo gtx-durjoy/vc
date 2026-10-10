@@ -1,5 +1,5 @@
 // ==========================================================================
-// LUNA DASHBOARD LANDING PAGE & AUTHENTICATION CONTROLLER
+// LUNA DASHBOARD LANDING PAGE & AUTHENTICATION CONTROLLER (DURJOY STYLED)
 // ==========================================================================
 
 function openLoginModal() {
@@ -50,54 +50,180 @@ async function handlePasskeyLogin(e) {
   }
 }
 
-// Three.js 3D Background Scene for Landing Page
+// ==========================================================================
+// CUSTOM CURSOR & PARTICLES (durjoyxcheat.bond style)
+// ==========================================================================
+const initCursor = () => {
+  const cursorDot = document.querySelector('.cursor-dot');
+  const cursorOutline = document.querySelector('.cursor-outline');
+  const particlesContainer = document.getElementById('particles');
+
+  if (!cursorDot || !cursorOutline) return;
+
+  if (window.matchMedia("(pointer: fine)").matches) {
+    window.addEventListener('mousemove', (e) => {
+      const posX = e.clientX;
+      const posY = e.clientY;
+
+      cursorDot.style.left = `${posX}px`;
+      cursorDot.style.top = `${posY}px`;
+
+      cursorOutline.animate({
+        left: `${posX}px`,
+        top: `${posY}px`
+      }, { duration: 400, fill: "forwards" });
+
+      // Spawn subtle glowing red particle
+      if (particlesContainer && Math.random() > 0.4) {
+        const p = document.createElement('div');
+        p.className = 'cursor-particle';
+        p.style.left = `${posX}px`;
+        p.style.top = `${posY}px`;
+        particlesContainer.appendChild(p);
+
+        setTimeout(() => {
+          p.style.transition = 'all 0.6s ease';
+          p.style.transform = 'translateY(15px) scale(0)';
+          p.style.opacity = '0';
+          setTimeout(() => p.remove(), 600);
+        }, 20);
+      }
+    });
+
+    const clickables = document.querySelectorAll('a, button, .feature-box, .btn');
+    clickables.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursorOutline.style.width = '55px';
+        cursorOutline.style.height = '55px';
+        cursorOutline.style.backgroundColor = 'rgba(255, 42, 42, 0.15)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursorOutline.style.width = '40px';
+        cursorOutline.style.height = '40px';
+        cursorOutline.style.backgroundColor = 'transparent';
+      });
+    });
+  } else {
+    cursorDot.style.display = 'none';
+    cursorOutline.style.display = 'none';
+  }
+};
+
+// ==========================================================================
+// SECURITY DEVTOOLS & INSPECT PROTECTION (durjoyxcheat.bond style)
+// ==========================================================================
+const initSecurityToast = () => {
+  const toast = document.getElementById('security-toast');
+  if (!toast) return;
+
+  const showSecurityNotice = () => {
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2800);
+  };
+
+  document.addEventListener('contextmenu', (e) => {
+    // Optional discreet toast on right click
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      showSecurityNotice();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j'))) {
+      showSecurityNotice();
+    }
+  });
+};
+
+// ==========================================================================
+// THREE.JS CRIMSON FLOATING EMBER PARTICLES SCENE (durjoyxcheat.bond style)
+// ==========================================================================
 function initLanding3D() {
   const container = document.getElementById('webgl-canvas-container');
   if (!container || typeof THREE === 'undefined') return;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
-  camera.position.z = 550;
+  scene.fog = new THREE.FogExp2(0x050000, 0.002);
 
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
+  camera.position.z = 1000;
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: "high-performance" });
+  const isMobile = window.innerWidth <= 900;
+  renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 1.5));
   renderer.setSize(window.innerWidth, window.innerHeight);
   container.appendChild(renderer.domElement);
 
-  const group = new THREE.Group();
-  scene.add(group);
+  // Floating crimson embers
+  const particleCount = isMobile ? 1500 : 3500;
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(particleCount * 3);
+  const velocities = [];
 
-  // Glowing sphere
-  const sphereGeo = new THREE.SphereGeometry(130, 28, 28);
-  const sphereMat = new THREE.PointsMaterial({
-    color: 0x00F0FF,
-    size: 3.2,
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 2200;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 2200;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 1600 + 200;
+
+    velocities.push({
+      x: (Math.random() - 0.5) * 0.4,
+      y: Math.random() * 1.8 + 0.4, // Floating upwards gently
+      z: (Math.random() - 0.5) * 0.4
+    });
+  }
+
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+  // Circular ember particle texture
+  const particleCanvas = document.createElement('canvas');
+  particleCanvas.width = 16;
+  particleCanvas.height = 16;
+  const pCtx = particleCanvas.getContext('2d');
+  const gradient = pCtx.createRadialGradient(8, 8, 0, 8, 8, 8);
+  gradient.addColorStop(0, '#ffffff');
+  gradient.addColorStop(0.3, '#ff2a2a');
+  gradient.addColorStop(0.8, '#880000');
+  gradient.addColorStop(1, 'rgba(0,0,0,0)');
+  pCtx.fillStyle = gradient;
+  pCtx.fillRect(0, 0, 16, 16);
+  const pTexture = new THREE.CanvasTexture(particleCanvas);
+
+  const material = new THREE.PointsMaterial({
+    size: 6,
+    map: pTexture,
     transparent: true,
-    opacity: 0.8,
-    blending: THREE.AdditiveBlending
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    opacity: 0.85
   });
-  const sphere = new THREE.Points(sphereGeo, sphereMat);
-  group.add(sphere);
 
-  // Concentric Rings
+  const particleSystem = new THREE.Points(geometry, material);
+  scene.add(particleSystem);
+
+  // Concentric gothic cyber rings in center background
+  const ringGroup = new THREE.Group();
+  scene.add(ringGroup);
+
   const ring1 = new THREE.Mesh(
-    new THREE.TorusGeometry(220, 2.0, 16, 90),
-    new THREE.MeshBasicMaterial({ color: 0x5865F2, wireframe: true, transparent: true, opacity: 0.4 })
+    new THREE.TorusGeometry(320, 2, 16, 90),
+    new THREE.MeshBasicMaterial({ color: 0xff2a2a, wireframe: true, transparent: true, opacity: 0.35 })
   );
   ring1.rotation.x = Math.PI / 3;
-  group.add(ring1);
+  ringGroup.add(ring1);
 
   const ring2 = new THREE.Mesh(
-    new THREE.TorusGeometry(270, 1.8, 16, 90),
-    new THREE.MeshBasicMaterial({ color: 0x9B59B6, wireframe: true, transparent: true, opacity: 0.4 })
+    new THREE.TorusGeometry(400, 1.5, 16, 90),
+    new THREE.MeshBasicMaterial({ color: 0x960018, wireframe: true, transparent: true, opacity: 0.25 })
   );
   ring2.rotation.y = Math.PI / 4;
-  group.add(ring2);
+  ringGroup.add(ring2);
 
   let mouseX = 0, mouseY = 0;
-  document.addEventListener('mousemove', (e) => {
-    mouseX = (e.clientX - window.innerWidth / 2) * 0.0006;
-    mouseY = (e.clientY - window.innerHeight / 2) * 0.0006;
+  window.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX - window.innerWidth / 2) * 0.0004;
+    mouseY = (e.clientY - window.innerHeight / 2) * 0.0004;
   });
 
   window.addEventListener('resize', () => {
@@ -106,33 +232,38 @@ function initLanding3D() {
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  function animate() {
+  const animate = () => {
     requestAnimationFrame(animate);
-    sphere.rotation.y += 0.004;
-    ring1.rotation.z += 0.006;
-    ring2.rotation.z -= 0.005;
 
-    group.rotation.y += (mouseX - group.rotation.y) * 0.05;
-    group.rotation.x += (mouseY - group.rotation.x) * 0.05;
+    const pos = geometry.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+      pos[i * 3 + 1] += velocities[i].y;
+      pos[i * 3] += velocities[i].x;
+      pos[i * 3 + 2] += velocities[i].z;
+
+      // Wrap around screen top
+      if (pos[i * 3 + 1] > 1100) {
+        pos[i * 3 + 1] = -1100;
+        pos[i * 3] = (Math.random() - 0.5) * 2200;
+      }
+    }
+    geometry.attributes.position.needsUpdate = true;
+
+    ring1.rotation.z += 0.002;
+    ring2.rotation.z -= 0.0015;
+
+    camera.position.x += (mouseX * 1000 - camera.position.x) * 0.03;
+    camera.position.y += (-mouseY * 1000 - camera.position.y) * 0.03;
+    camera.lookAt(scene.position);
 
     renderer.render(scene, camera);
-  }
+  };
 
   animate();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
   initLanding3D();
-
-  // Check if redirected with an error (e.g. missing Discord Client Secret)
-  const params = new URLSearchParams(window.location.search);
-  const error = params.get('error');
-  if (error) {
-    openLoginModal();
-    if (error === 'missing_secret') {
-      alert("💡 Discord OAuth2 requires Client Secret in Discord Developer Portal.\n\n👉 You can log in directly right now by clicking 'Enter Dashboard Immediately' with the prefilled Passkey (luna2026)!");
-    } else {
-      alert("Notice: " + (params.get('details') || error));
-    }
-  }
+  initCursor();
+  initSecurityToast();
 });
